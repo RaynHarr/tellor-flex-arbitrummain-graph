@@ -1,0 +1,47 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Contract
+    network: arbitrum-one
+    source:
+      address: "0x73B6715D9289bdfE5e758bB7ace782Cc7C933cfC"
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NewGovernanceAddress
+        - NewReport
+        - NewReportingLock
+        - NewStakeAmount
+        - NewStaker
+        - ReporterSlashed
+        - StakeWithdrawRequested
+        - StakeWithdrawn
+        - ValueRemoved
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: NewGovernanceAddress(address)
+          handler: handleNewGovernanceAddress
+        - event: NewReport(bytes32,uint256,bytes,uint256,bytes,address)
+          handler: handleNewReport
+        - event: NewReportingLock(uint256)
+          handler: handleNewReportingLock
+        - event: NewStakeAmount(uint256)
+          handler: handleNewStakeAmount
+        - event: NewStaker(address,uint256)
+          handler: handleNewStaker
+        - event: ReporterSlashed(address,address,uint256)
+          handler: handleReporterSlashed
+        - event: StakeWithdrawRequested(address,uint256)
+          handler: handleStakeWithdrawRequested
+        - event: StakeWithdrawn(address)
+          handler: handleStakeWithdrawn
+        - event: ValueRemoved(bytes32,uint256)
+          handler: handleValueRemoved
+      file: ./src/contract.ts
