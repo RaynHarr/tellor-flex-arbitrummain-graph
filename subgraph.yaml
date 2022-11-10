@@ -45,4 +45,4 @@ dataSources:
           handler: handleStakeWithdrawn
         - event: ValueRemoved(bytes32,uint256)
           handler: handleValueRemoved
-      file: ./src/contract.ts
+      file: ./src/mapping.ts
