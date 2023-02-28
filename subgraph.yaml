@@ -6,7 +6,7 @@ dataSources:
     name: Contract
     network: arbitrum-one
     source:
-      address: "0x73B6715D9289bdfE5e758bB7ace782Cc7C933cfC"
+      address: "0xD9157453E2668B2fc45b7A803D3FEF3642430cC0"
       abi: Contract
       startBlock: 33282293
     mapping:
