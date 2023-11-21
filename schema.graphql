@@ -1,5 +1,5 @@
 type NewReportEntity @entity {
-  id: ID!
+  id: Bytes!
   _queryId: Bytes! # Bytes32
   _time: BigInt! # uint256/UnixTimestamp
   _value: Bytes! # Bytes

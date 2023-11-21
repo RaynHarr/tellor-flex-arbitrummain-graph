@@ -11,52 +11,137 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ExampleEntity extends Entity {
-  constructor(id: string) {
+export class NewReportEntity extends Entity {
+  constructor(id: Bytes) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromBytes(id));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ExampleEntity entity without an ID");
+    assert(id != null, "Cannot save NewReportEntity entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type ExampleEntity must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.BYTES,
+        `Entities of type NewReportEntity must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ExampleEntity", id.toString(), this);
+      store.set("NewReportEntity", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: string): ExampleEntity | null {
-    return changetype<ExampleEntity | null>(store.get("ExampleEntity", id));
+  static loadInBlock(id: Bytes): NewReportEntity | null {
+    return changetype<NewReportEntity | null>(
+      store.get_in_block("NewReportEntity", id.toHexString())
+    );
   }
 
-  get id(): string {
+  static load(id: Bytes): NewReportEntity | null {
+    return changetype<NewReportEntity | null>(
+      store.get("NewReportEntity", id.toHexString())
+    );
+  }
+
+  get id(): Bytes {
     let value = this.get("id");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
   }
 
-  get count(): BigInt {
-    let value = this.get("count");
-    return value!.toBigInt();
+  get _queryId(): Bytes {
+    let value = this.get("_queryId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
   }
 
-  set count(value: BigInt) {
-    this.set("count", Value.fromBigInt(value));
+  set _queryId(value: Bytes) {
+    this.set("_queryId", Value.fromBytes(value));
   }
 
-  get _newGovernanceAddress(): Bytes {
-    let value = this.get("_newGovernanceAddress");
-    return value!.toBytes();
+  get _time(): BigInt {
+    let value = this.get("_time");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set _newGovernanceAddress(value: Bytes) {
-    this.set("_newGovernanceAddress", Value.fromBytes(value));
+  set _time(value: BigInt) {
+    this.set("_time", Value.fromBigInt(value));
+  }
+
+  get _value(): Bytes {
+    let value = this.get("_value");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set _value(value: Bytes) {
+    this.set("_value", Value.fromBytes(value));
+  }
+
+  get _nonce(): BigInt {
+    let value = this.get("_nonce");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set _nonce(value: BigInt) {
+    this.set("_nonce", Value.fromBigInt(value));
+  }
+
+  get _queryData(): Bytes {
+    let value = this.get("_queryData");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set _queryData(value: Bytes) {
+    this.set("_queryData", Value.fromBytes(value));
+  }
+
+  get _reporter(): Bytes {
+    let value = this.get("_reporter");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set _reporter(value: Bytes) {
+    this.set("_reporter", Value.fromBytes(value));
+  }
+
+  get txnHash(): Bytes {
+    let value = this.get("txnHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set txnHash(value: Bytes) {
+    this.set("txnHash", Value.fromBytes(value));
   }
 }

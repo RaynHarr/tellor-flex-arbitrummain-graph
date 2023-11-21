@@ -10,24 +10,6 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
-export class NewGovernanceAddress extends ethereum.Event {
-  get params(): NewGovernanceAddress__Params {
-    return new NewGovernanceAddress__Params(this);
-  }
-}
-
-export class NewGovernanceAddress__Params {
-  _event: NewGovernanceAddress;
-
-  constructor(event: NewGovernanceAddress) {
-    this._event = event;
-  }
-
-  get _newGovernanceAddress(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-}
-
 export class NewReport extends ethereum.Event {
   get params(): NewReport__Params {
     return new NewReport__Params(this);
@@ -63,24 +45,6 @@ export class NewReport__Params {
 
   get _reporter(): Address {
     return this._event.parameters[5].value.toAddress();
-  }
-}
-
-export class NewReportingLock extends ethereum.Event {
-  get params(): NewReportingLock__Params {
-    return new NewReportingLock__Params(this);
-  }
-}
-
-export class NewReportingLock__Params {
-  _event: NewReportingLock;
-
-  constructor(event: NewReportingLock) {
-    this._event = event;
-  }
-
-  get _newReportingLock(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
   }
 }
 
@@ -212,6 +176,63 @@ export class ValueRemoved__Params {
   }
 }
 
+export class Contract__getDataBeforeResult {
+  value0: boolean;
+  value1: Bytes;
+  value2: BigInt;
+
+  constructor(value0: boolean, value1: Bytes, value2: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromBoolean(this.value0));
+    map.set("value1", ethereum.Value.fromBytes(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    return map;
+  }
+
+  get_ifRetrieve(): boolean {
+    return this.value0;
+  }
+
+  get_value(): Bytes {
+    return this.value1;
+  }
+
+  get_timestampRetrieved(): BigInt {
+    return this.value2;
+  }
+}
+
+export class Contract__getIndexForDataBeforeResult {
+  value0: boolean;
+  value1: BigInt;
+
+  constructor(value0: boolean, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromBoolean(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+
+  get_found(): boolean {
+    return this.value0;
+  }
+
+  get_index(): BigInt {
+    return this.value1;
+  }
+}
+
 export class Contract__getReportDetailsResult {
   value0: Address;
   value1: boolean;
@@ -243,19 +264,31 @@ export class Contract__getStakerInfoResult {
   value2: BigInt;
   value3: BigInt;
   value4: BigInt;
+  value5: BigInt;
+  value6: BigInt;
+  value7: BigInt;
+  value8: boolean;
 
   constructor(
     value0: BigInt,
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: BigInt
+    value4: BigInt,
+    value5: BigInt,
+    value6: BigInt,
+    value7: BigInt,
+    value8: boolean
   ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
     this.value4 = value4;
+    this.value5 = value5;
+    this.value6 = value6;
+    this.value7 = value7;
+    this.value8 = value8;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -265,6 +298,10 @@ export class Contract__getStakerInfoResult {
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
+    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
+    map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
+    map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
+    map.set("value8", ethereum.Value.fromBoolean(this.value8));
     return map;
   }
 
@@ -287,6 +324,22 @@ export class Contract__getStakerInfoResult {
   getValue4(): BigInt {
     return this.value4;
   }
+
+  getValue5(): BigInt {
+    return this.value5;
+  }
+
+  getValue6(): BigInt {
+    return this.value6;
+  }
+
+  getValue7(): BigInt {
+    return this.value7;
+  }
+
+  getValue8(): boolean {
+    return this.value8;
+  }
 }
 
 export class Contract extends ethereum.SmartContract {
@@ -294,30 +347,21 @@ export class Contract extends ethereum.SmartContract {
     return new Contract("Contract", address);
   }
 
-  getBlockNumberByTimestamp(_queryId: Bytes, _timestamp: BigInt): BigInt {
+  accumulatedRewardPerShare(): BigInt {
     let result = super.call(
-      "getBlockNumberByTimestamp",
-      "getBlockNumberByTimestamp(bytes32,uint256):(uint256)",
-      [
-        ethereum.Value.fromFixedBytes(_queryId),
-        ethereum.Value.fromUnsignedBigInt(_timestamp)
-      ]
+      "accumulatedRewardPerShare",
+      "accumulatedRewardPerShare():(uint256)",
+      []
     );
 
     return result[0].toBigInt();
   }
 
-  try_getBlockNumberByTimestamp(
-    _queryId: Bytes,
-    _timestamp: BigInt
-  ): ethereum.CallResult<BigInt> {
+  try_accumulatedRewardPerShare(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "getBlockNumberByTimestamp",
-      "getBlockNumberByTimestamp(bytes32,uint256):(uint256)",
-      [
-        ethereum.Value.fromFixedBytes(_queryId),
-        ethereum.Value.fromUnsignedBigInt(_timestamp)
-      ]
+      "accumulatedRewardPerShare",
+      "accumulatedRewardPerShare():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -349,6 +393,51 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
+  getDataBefore(
+    _queryId: Bytes,
+    _timestamp: BigInt
+  ): Contract__getDataBeforeResult {
+    let result = super.call(
+      "getDataBefore",
+      "getDataBefore(bytes32,uint256):(bool,bytes,uint256)",
+      [
+        ethereum.Value.fromFixedBytes(_queryId),
+        ethereum.Value.fromUnsignedBigInt(_timestamp)
+      ]
+    );
+
+    return new Contract__getDataBeforeResult(
+      result[0].toBoolean(),
+      result[1].toBytes(),
+      result[2].toBigInt()
+    );
+  }
+
+  try_getDataBefore(
+    _queryId: Bytes,
+    _timestamp: BigInt
+  ): ethereum.CallResult<Contract__getDataBeforeResult> {
+    let result = super.tryCall(
+      "getDataBefore",
+      "getDataBefore(bytes32,uint256):(bool,bytes,uint256)",
+      [
+        ethereum.Value.fromFixedBytes(_queryId),
+        ethereum.Value.fromUnsignedBigInt(_timestamp)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Contract__getDataBeforeResult(
+        value[0].toBoolean(),
+        value[1].toBytes(),
+        value[2].toBigInt()
+      )
+    );
+  }
+
   getGovernanceAddress(): Address {
     let result = super.call(
       "getGovernanceAddress",
@@ -372,6 +461,49 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  getIndexForDataBefore(
+    _queryId: Bytes,
+    _timestamp: BigInt
+  ): Contract__getIndexForDataBeforeResult {
+    let result = super.call(
+      "getIndexForDataBefore",
+      "getIndexForDataBefore(bytes32,uint256):(bool,uint256)",
+      [
+        ethereum.Value.fromFixedBytes(_queryId),
+        ethereum.Value.fromUnsignedBigInt(_timestamp)
+      ]
+    );
+
+    return new Contract__getIndexForDataBeforeResult(
+      result[0].toBoolean(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_getIndexForDataBefore(
+    _queryId: Bytes,
+    _timestamp: BigInt
+  ): ethereum.CallResult<Contract__getIndexForDataBeforeResult> {
+    let result = super.tryCall(
+      "getIndexForDataBefore",
+      "getIndexForDataBefore(bytes32,uint256):(bool,uint256)",
+      [
+        ethereum.Value.fromFixedBytes(_queryId),
+        ethereum.Value.fromUnsignedBigInt(_timestamp)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Contract__getIndexForDataBeforeResult(
+        value[0].toBoolean(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
   getNewValueCountbyQueryId(_queryId: Bytes): BigInt {
     let result = super.call(
       "getNewValueCountbyQueryId",
@@ -387,6 +519,54 @@ export class Contract extends ethereum.SmartContract {
       "getNewValueCountbyQueryId",
       "getNewValueCountbyQueryId(bytes32):(uint256)",
       [ethereum.Value.fromFixedBytes(_queryId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getPendingRewardByStaker(_stakerAddress: Address): BigInt {
+    let result = super.call(
+      "getPendingRewardByStaker",
+      "getPendingRewardByStaker(address):(uint256)",
+      [ethereum.Value.fromAddress(_stakerAddress)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getPendingRewardByStaker(
+    _stakerAddress: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getPendingRewardByStaker",
+      "getPendingRewardByStaker(address):(uint256)",
+      [ethereum.Value.fromAddress(_stakerAddress)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getRealStakingRewardsBalance(): BigInt {
+    let result = super.call(
+      "getRealStakingRewardsBalance",
+      "getRealStakingRewardsBalance():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getRealStakingRewardsBalance(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getRealStakingRewardsBalance",
+      "getRealStakingRewardsBalance():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -543,41 +723,6 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getReportsSubmittedByAddressAndQueryId(
-    _reporter: Address,
-    _queryId: Bytes
-  ): BigInt {
-    let result = super.call(
-      "getReportsSubmittedByAddressAndQueryId",
-      "getReportsSubmittedByAddressAndQueryId(address,bytes32):(uint256)",
-      [
-        ethereum.Value.fromAddress(_reporter),
-        ethereum.Value.fromFixedBytes(_queryId)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getReportsSubmittedByAddressAndQueryId(
-    _reporter: Address,
-    _queryId: Bytes
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getReportsSubmittedByAddressAndQueryId",
-      "getReportsSubmittedByAddressAndQueryId(address,bytes32):(uint256)",
-      [
-        ethereum.Value.fromAddress(_reporter),
-        ethereum.Value.fromFixedBytes(_queryId)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   getStakeAmount(): BigInt {
     let result = super.call("getStakeAmount", "getStakeAmount():(uint256)", []);
 
@@ -597,11 +742,11 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getStakerInfo(_staker: Address): Contract__getStakerInfoResult {
+  getStakerInfo(_stakerAddress: Address): Contract__getStakerInfoResult {
     let result = super.call(
       "getStakerInfo",
-      "getStakerInfo(address):(uint256,uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromAddress(_staker)]
+      "getStakerInfo(address):(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool)",
+      [ethereum.Value.fromAddress(_stakerAddress)]
     );
 
     return new Contract__getStakerInfoResult(
@@ -609,17 +754,21 @@ export class Contract extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toBigInt()
+      result[4].toBigInt(),
+      result[5].toBigInt(),
+      result[6].toBigInt(),
+      result[7].toBigInt(),
+      result[8].toBoolean()
     );
   }
 
   try_getStakerInfo(
-    _staker: Address
+    _stakerAddress: Address
   ): ethereum.CallResult<Contract__getStakerInfoResult> {
     let result = super.tryCall(
       "getStakerInfo",
-      "getStakerInfo(address):(uint256,uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromAddress(_staker)]
+      "getStakerInfo(address):(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool)",
+      [ethereum.Value.fromAddress(_stakerAddress)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -631,7 +780,11 @@ export class Contract extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toBigInt()
+        value[4].toBigInt(),
+        value[5].toBigInt(),
+        value[6].toBigInt(),
+        value[7].toBigInt(),
+        value[8].toBoolean()
       )
     );
   }
@@ -769,6 +922,52 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getTotalStakers(): BigInt {
+    let result = super.call(
+      "getTotalStakers",
+      "getTotalStakers():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getTotalStakers(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getTotalStakers",
+      "getTotalStakers():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getTotalTimeBasedRewardsBalance(): BigInt {
+    let result = super.call(
+      "getTotalTimeBasedRewardsBalance",
+      "getTotalTimeBasedRewardsBalance():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getTotalTimeBasedRewardsBalance(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getTotalTimeBasedRewardsBalance",
+      "getTotalTimeBasedRewardsBalance():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   governance(): Address {
     let result = super.call("governance", "governance():(address)", []);
 
@@ -777,6 +976,76 @@ export class Contract extends ethereum.SmartContract {
 
   try_governance(): ethereum.CallResult<Address> {
     let result = super.tryCall("governance", "governance():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  isInDispute(_queryId: Bytes, _timestamp: BigInt): boolean {
+    let result = super.call(
+      "isInDispute",
+      "isInDispute(bytes32,uint256):(bool)",
+      [
+        ethereum.Value.fromFixedBytes(_queryId),
+        ethereum.Value.fromUnsignedBigInt(_timestamp)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isInDispute(
+    _queryId: Bytes,
+    _timestamp: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isInDispute",
+      "isInDispute(bytes32,uint256):(bool)",
+      [
+        ethereum.Value.fromFixedBytes(_queryId),
+        ethereum.Value.fromUnsignedBigInt(_timestamp)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  minimumStakeAmount(): BigInt {
+    let result = super.call(
+      "minimumStakeAmount",
+      "minimumStakeAmount():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_minimumStakeAmount(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "minimumStakeAmount",
+      "minimumStakeAmount():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  owner(): Address {
+    let result = super.call("owner", "owner():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_owner(): ethereum.CallResult<Address> {
+    let result = super.tryCall("owner", "owner():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -835,6 +1104,21 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
+  rewardRate(): BigInt {
+    let result = super.call("rewardRate", "rewardRate():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_rewardRate(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("rewardRate", "rewardRate():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   slashReporter(_reporter: Address, _recipient: Address): BigInt {
     let result = super.call(
       "slashReporter",
@@ -882,6 +1166,121 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  stakeAmountDollarTarget(): BigInt {
+    let result = super.call(
+      "stakeAmountDollarTarget",
+      "stakeAmountDollarTarget():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_stakeAmountDollarTarget(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "stakeAmountDollarTarget",
+      "stakeAmountDollarTarget():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  stakingRewardsBalance(): BigInt {
+    let result = super.call(
+      "stakingRewardsBalance",
+      "stakingRewardsBalance():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_stakingRewardsBalance(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "stakingRewardsBalance",
+      "stakingRewardsBalance():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  stakingTokenPriceQueryId(): Bytes {
+    let result = super.call(
+      "stakingTokenPriceQueryId",
+      "stakingTokenPriceQueryId():(bytes32)",
+      []
+    );
+
+    return result[0].toBytes();
+  }
+
+  try_stakingTokenPriceQueryId(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "stakingTokenPriceQueryId",
+      "stakingTokenPriceQueryId():(bytes32)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
+  timeBasedReward(): BigInt {
+    let result = super.call(
+      "timeBasedReward",
+      "timeBasedReward():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_timeBasedReward(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "timeBasedReward",
+      "timeBasedReward():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  timeOfLastAllocation(): BigInt {
+    let result = super.call(
+      "timeOfLastAllocation",
+      "timeOfLastAllocation():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_timeOfLastAllocation(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "timeOfLastAllocation",
+      "timeOfLastAllocation():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   timeOfLastNewValue(): BigInt {
     let result = super.call(
       "timeOfLastNewValue",
@@ -905,6 +1304,21 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  toWithdraw(): BigInt {
+    let result = super.call("toWithdraw", "toWithdraw():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_toWithdraw(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("toWithdraw", "toWithdraw():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   token(): Address {
     let result = super.call("token", "token():(address)", []);
 
@@ -918,6 +1332,29 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  totalRewardDebt(): BigInt {
+    let result = super.call(
+      "totalRewardDebt",
+      "totalRewardDebt():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_totalRewardDebt(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "totalRewardDebt",
+      "totalRewardDebt():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   totalStakeAmount(): BigInt {
@@ -936,6 +1373,36 @@ export class Contract extends ethereum.SmartContract {
       "totalStakeAmount():(uint256)",
       []
     );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  totalStakers(): BigInt {
+    let result = super.call("totalStakers", "totalStakers():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_totalStakers(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("totalStakers", "totalStakers():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  verify(): BigInt {
+    let result = super.call("verify", "verify():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_verify(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("verify", "verify():(uint256)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -965,16 +1432,24 @@ export class ConstructorCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _governance(): Address {
-    return this._call.inputValues[1].value.toAddress();
+  get _reportingLock(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _stakeAmount(): BigInt {
+  get _stakeAmountDollarTarget(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _reportingLock(): BigInt {
+  get _stakingTokenPrice(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get _minimumStakeAmount(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get _stakingTokenPriceQueryId(): Bytes {
+    return this._call.inputValues[5].value.toBytes();
   }
 }
 
@@ -986,92 +1461,32 @@ export class ConstructorCall__Outputs {
   }
 }
 
-export class ChangeGovernanceAddressCall extends ethereum.Call {
-  get inputs(): ChangeGovernanceAddressCall__Inputs {
-    return new ChangeGovernanceAddressCall__Inputs(this);
+export class AddStakingRewardsCall extends ethereum.Call {
+  get inputs(): AddStakingRewardsCall__Inputs {
+    return new AddStakingRewardsCall__Inputs(this);
   }
 
-  get outputs(): ChangeGovernanceAddressCall__Outputs {
-    return new ChangeGovernanceAddressCall__Outputs(this);
+  get outputs(): AddStakingRewardsCall__Outputs {
+    return new AddStakingRewardsCall__Outputs(this);
   }
 }
 
-export class ChangeGovernanceAddressCall__Inputs {
-  _call: ChangeGovernanceAddressCall;
+export class AddStakingRewardsCall__Inputs {
+  _call: AddStakingRewardsCall;
 
-  constructor(call: ChangeGovernanceAddressCall) {
+  constructor(call: AddStakingRewardsCall) {
     this._call = call;
   }
 
-  get _newGovernanceAddress(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class ChangeGovernanceAddressCall__Outputs {
-  _call: ChangeGovernanceAddressCall;
-
-  constructor(call: ChangeGovernanceAddressCall) {
-    this._call = call;
-  }
-}
-
-export class ChangeReportingLockCall extends ethereum.Call {
-  get inputs(): ChangeReportingLockCall__Inputs {
-    return new ChangeReportingLockCall__Inputs(this);
-  }
-
-  get outputs(): ChangeReportingLockCall__Outputs {
-    return new ChangeReportingLockCall__Outputs(this);
-  }
-}
-
-export class ChangeReportingLockCall__Inputs {
-  _call: ChangeReportingLockCall;
-
-  constructor(call: ChangeReportingLockCall) {
-    this._call = call;
-  }
-
-  get _newReportingLock(): BigInt {
+  get _amount(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 }
 
-export class ChangeReportingLockCall__Outputs {
-  _call: ChangeReportingLockCall;
+export class AddStakingRewardsCall__Outputs {
+  _call: AddStakingRewardsCall;
 
-  constructor(call: ChangeReportingLockCall) {
-    this._call = call;
-  }
-}
-
-export class ChangeStakeAmountCall extends ethereum.Call {
-  get inputs(): ChangeStakeAmountCall__Inputs {
-    return new ChangeStakeAmountCall__Inputs(this);
-  }
-
-  get outputs(): ChangeStakeAmountCall__Outputs {
-    return new ChangeStakeAmountCall__Outputs(this);
-  }
-}
-
-export class ChangeStakeAmountCall__Inputs {
-  _call: ChangeStakeAmountCall;
-
-  constructor(call: ChangeStakeAmountCall) {
-    this._call = call;
-  }
-
-  get _newStakeAmount(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class ChangeStakeAmountCall__Outputs {
-  _call: ChangeStakeAmountCall;
-
-  constructor(call: ChangeStakeAmountCall) {
+  constructor(call: AddStakingRewardsCall) {
     this._call = call;
   }
 }
@@ -1102,6 +1517,70 @@ export class DepositStakeCall__Outputs {
   _call: DepositStakeCall;
 
   constructor(call: DepositStakeCall) {
+    this._call = call;
+  }
+}
+
+export class GetPendingRewardByStakerCall extends ethereum.Call {
+  get inputs(): GetPendingRewardByStakerCall__Inputs {
+    return new GetPendingRewardByStakerCall__Inputs(this);
+  }
+
+  get outputs(): GetPendingRewardByStakerCall__Outputs {
+    return new GetPendingRewardByStakerCall__Outputs(this);
+  }
+}
+
+export class GetPendingRewardByStakerCall__Inputs {
+  _call: GetPendingRewardByStakerCall;
+
+  constructor(call: GetPendingRewardByStakerCall) {
+    this._call = call;
+  }
+
+  get _stakerAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class GetPendingRewardByStakerCall__Outputs {
+  _call: GetPendingRewardByStakerCall;
+
+  constructor(call: GetPendingRewardByStakerCall) {
+    this._call = call;
+  }
+
+  get _pendingReward(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
+export class InitCall extends ethereum.Call {
+  get inputs(): InitCall__Inputs {
+    return new InitCall__Inputs(this);
+  }
+
+  get outputs(): InitCall__Outputs {
+    return new InitCall__Outputs(this);
+  }
+}
+
+export class InitCall__Inputs {
+  _call: InitCall;
+
+  constructor(call: InitCall) {
+    this._call = call;
+  }
+
+  get _governanceAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class InitCall__Outputs {
+  _call: InitCall;
+
+  constructor(call: InitCall) {
     this._call = call;
   }
 }
@@ -1203,7 +1682,7 @@ export class SlashReporterCall__Outputs {
     this._call = call;
   }
 
-  get value0(): BigInt {
+  get _slashAmount(): BigInt {
     return this._call.outputValues[0].value.toBigInt();
   }
 }
@@ -1246,6 +1725,32 @@ export class SubmitValueCall__Outputs {
   _call: SubmitValueCall;
 
   constructor(call: SubmitValueCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateStakeAmountCall extends ethereum.Call {
+  get inputs(): UpdateStakeAmountCall__Inputs {
+    return new UpdateStakeAmountCall__Inputs(this);
+  }
+
+  get outputs(): UpdateStakeAmountCall__Outputs {
+    return new UpdateStakeAmountCall__Outputs(this);
+  }
+}
+
+export class UpdateStakeAmountCall__Inputs {
+  _call: UpdateStakeAmountCall;
+
+  constructor(call: UpdateStakeAmountCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateStakeAmountCall__Outputs {
+  _call: UpdateStakeAmountCall;
+
+  constructor(call: UpdateStakeAmountCall) {
     this._call = call;
   }
 }
